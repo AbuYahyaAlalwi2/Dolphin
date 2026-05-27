@@ -44,6 +44,7 @@ if __name__ == "__main__":
                     msg = update.get('message', {}).get('text', '')
                     if msg:
                         execute_task(msg)
+                        Update code for security
         except Exception as e:
             print(f"خطأ في الاتصال: {e}")
         time.sleep(2)
