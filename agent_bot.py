@@ -3,7 +3,7 @@ import requests
 import time
 from playwright.sync_api import sync_playwright
 
-# سحب البيانات من متغيرات السيرفر
+# سحب البيانات من متغيرات البيئة في Render
 TOKEN = os.getenv("TELEGRAM_TOKEN")
 CHAT_ID = os.getenv("TELEGRAM_CHAT_ID")
 
@@ -11,19 +11,25 @@ def send_msg(text):
     if not TOKEN or not CHAT_ID:
         return
     url = f"https://api.telegram.org/bot{TOKEN}/sendMessage"
-    requests.post(url, json={"chat_id": CHAT_ID, "text": text})
+    try:
+        requests.post(url, json={"chat_id": CHAT_ID, "text": text})
+    except Exception as e:
+        print(f"خطأ في إرسال الرسالة: {e}")
 
 def execute_task(command):
     if "افتح جوجل" in command:
         send_msg("جاري تنفيذ طلبك يا سيدي...")
-        with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
-            page = browser.new_page()
-            page.goto("https://www.google.com")
-            send_msg("تم فتح جوجل بنجاح.")
-            browser.close()
-    elif "سجل الدخول" in command:
-        send_msg("عملية تسجيل الدخول قيد التطوير...")
+        try:
+            with sync_playwright() as p:
+                browser = p.chromium.launch(headless=True)
+                page = browser.new_page()
+                page.goto("https://www.google.com")
+                send_msg("تم فتح جوجل بنجاح.")
+                browser.close()
+        except Exception as e:
+            send_msg(f"حدث خطأ أثناء تنفيذ الأمر: {e}")
+    else:
+        send_msg("عذراً، هذا الأمر غير مدعوم حالياً.")
 
 if __name__ == "__main__":
     print("دولفين يعمل الآن في السحابة...")
@@ -39,5 +45,5 @@ if __name__ == "__main__":
                     if msg:
                         execute_task(msg)
         except Exception as e:
-            print(f"خطأ: {e}")
+            print(f"خطأ في الاتصال: {e}")
         time.sleep(2)
