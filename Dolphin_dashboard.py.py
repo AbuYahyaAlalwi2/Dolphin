@@ -33,3 +33,4 @@ if prompt := st.chat_input("Dolphin يستمع إليك..."):
             st.session_state.messages.append({"role": "assistant", "content": reply})
     else:
         st.error("مفتاح Groq غير موجود في إعدادات السيرفر.")
+        Update code for security
