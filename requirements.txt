@@ -3,3 +3,4 @@ langchain-groq
 playwright
 requests
 python-telegram-bot
+streamlit
